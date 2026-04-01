@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NGS Pipeline Validation — Clinical Bioinformatics Learning Resource</title>
+<link href="https://fonts.googleapis.com/css2?family=Frutiger:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --nhs-blue: #005eb8;
+    --nhs-dark-blue: #003087;
+    --nhs-bright-blue: #0072ce;
+    --nhs-light-blue: #41b6e6;
+    --nhs-aqua: #00a499;
+    --nhs-green: #009639;
+    --nhs-warm-yellow: #ffb81c;
+    --nhs-orange: #ed8b00;
+    --nhs-red: #da291c;
+    --nhs-dark-grey: #425563;
+    --nhs-mid-grey: #768692;
+    --nhs-pale-grey: #e8edee;
+    --nhs-white: #ffffff;
+    --nhs-black: #231f20;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.12);
+    --border-radius: 6px;
+    --transition: 0.25s ease;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: "Frutiger", "Arial", sans-serif;
+    background: #f0f4f5;
+    color: var(--nhs-black);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: var(--nhs-blue);
+    color: var(--nhs-white);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .nhs-logo {
+    background: var(--nhs-white);
+    color: var(--nhs-blue);
+    font-weight: 700;
+    font-size: 18px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .header-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .header-subtitle {
+    font-size: 13px;
+    opacity: 0.85;
+    font-weight: 400;
+  }
+  .header-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .header-nav a {
+    color: var(--nhs-white);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.12);
+    transition: background var(--transition);
+  }
+  .header-nav a:hover { background: rgba(255,255,255,0.25); }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--nhs-dark-blue) 0%, var(--nhs-blue) 50%, var(--nhs-bright-blue) 100%);
+    color: var(--nhs-white);
+    padding: 48px 24px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    font-size: 16px;
+    max-width: 720px;
+    margin: 0 auto 20px;
+    opacity: 0.9;
+    line-height: 1.5;
+  }
+  .hero-tags {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-tag {
+    background: rgba(255,255,255,0.18);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── MAIN CONTAINER ─── */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* ─── SECTION CARDS ─── */
+  .section-card {
+    background: var(--nhs-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    margin-bottom: 24px;
+    overflow: hidden;
+    border-left: 4px solid var(--nhs-blue);
+    transition: box-shadow var(--transition);
+  }
+  .section-card:hover { box-shadow: var(--card-shadow-hover); }
+
+  .section-header {
+    background: var(--nhs-pale-grey);
+    padding: 16px 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    transition: background var(--transition);
+  }
+  .section-header:hover { background: #dce4e6; }
+  .section-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--nhs-dark-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-header .section-num {
+    background: var(--nhs-blue);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-toggle {
+    font-size: 20px;
+    color: var(--nhs-mid-grey);
+    transition: transform var(--transition);
+    flex-shrink: 0;
+  }
+  .section-card.open .section-toggle { transform: rotate(180deg); }
+
+  .section-body {
+    padding: 0 24px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+  }
+  .section-card.open .section-body {
+    max-height: 8000px;
+    padding: 24px;
+  }
+
+  /* ─── DISCUSSION PROMPTS ─── */
+  .discussion-box {
+    background: #f0f7fb;
+    border: 1px solid #b8d8eb;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .discussion-box h3 {
+    color: var(--nhs-dark-blue);
+    font-size: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .discussion-box h3::before {
+    content: "💬";
+    font-size: 18px;
+  }
+  .discussion-box ul {
+    list-style: none;
+    padding: 0;
+  }
+  .discussion-box li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--nhs-dark-grey);
+  }
+  .discussion-box li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--nhs-bright-blue);
+    font-weight: 700;
+  }
+
+  /* ─── REVEAL BOXES ─── */
+  .reveal-box {
+    margin: 16px 0;
+    border: 1px dashed var(--nhs-mid-grey);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+  .reveal-btn {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    background: var(--nhs-pale-grey);
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--nhs-dark-blue);
+    transition: background var(--transition);
+  }
+  .reveal-btn:hover { background: #d5dfe2; }
+  .reveal-btn::before { content: "🔍 "; }
+  .reveal-content {
+    display: none;
+    padding: 16px 20px;
+    background: #fafcfd;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .reveal-content.shown { display: block; }
+  .reveal-content ul {
+    margin: 8px 0;
+    padding-left: 20px;
+  }
+  .reveal-content li {
+    margin-bottom: 6px;
+  }
+
+  /* ─── WARNING/INFO BOXES ─── */
+  .info-box {
+    padding: 16px 20px;
+    border-radius: var(--border-radius);
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .info-box.patient-safety {
+    background: #fef3f2;
+    border-left: 4px solid var(--nhs-red);
+  }
+  .info-box.patient-safety::before {
+    content: "⚠️ Patient Safety — ";
+    font-weight: 700;
+    color: var(--nhs-red);
+  }
+  .info-box.guideline {
+    background: #f0faf5;
+    border-left: 4px solid var(--nhs-green);
+  }
+  .info-box.guideline::before {
+    content: "📋 Published Guidance — ";
+    font-weight: 700;
+    color: var(--nhs-green);
+  }
+  .info-box.curriculum {
+    background: #fff8e8;
+    border-left: 4px solid var(--nhs-warm-yellow);
+  }
+  .info-box.curriculum::before {
+    content: "📚 Curriculum Link — ";
+    font-weight: 700;
+    color: #b58900;
+  }
+
+  /* ─── TIMER ─── */
+  .timer-section {
+    background: var(--nhs-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 32px;
+    margin-bottom: 24px;
+    text-align: center;
+    border-left: 4px solid var(--nhs-aqua);
+  }
+  .timer-section h2 {
+    color: var(--nhs-dark-blue);
+    margin-bottom: 8px;
+  }
+  .timer-desc {
+    color: var(--nhs-dark-grey);
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .timer-display {
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--nhs-dark-blue);
+    font-variant-numeric: tabular-nums;
+    margin: 16px 0;
+    letter-spacing: 2px;
+  }
+  .timer-display.warning { color: var(--nhs-orange); }
+  .timer-display.critical { color: var(--nhs-red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+  .timer-phase {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--nhs-mid-grey);
+    margin-bottom: 16px;
+    min-height: 20px;
+  }
+  .timer-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .timer-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .timer-btn.primary { background: var(--nhs-blue); color: white; }
+  .timer-btn.primary:hover { background: var(--nhs-dark-blue); }
+  .timer-btn.secondary { background: var(--nhs-pale-grey); color: var(--nhs-dark-grey); }
+  .timer-btn.secondary:hover { background: #d5dfe2; }
+  .timer-btn.danger { background: var(--nhs-red); color: white; }
+  .timer-btn.danger:hover { background: #b8221a; }
+
+  .timer-progress {
+    width: 100%;
+    height: 6px;
+    background: var(--nhs-pale-grey);
+    border-radius: 3px;
+    margin-top: 16px;
+    overflow: hidden;
+  }
+  .timer-progress-bar {
+    height: 100%;
+    background: var(--nhs-blue);
+    border-radius: 3px;
+    transition: width 1s linear;
+  }
+
+  /* ─── MCQ ─── */
+  .mcq-card {
+    background: var(--nhs-white);
+    border: 1px solid #d8dde0;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .mcq-card h4 {
+    color: var(--nhs-dark-blue);
+    font-size: 15px;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .mcq-option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 16px;
+    margin: 6px 0;
+    background: var(--nhs-pale-grey);
+    border: 2px solid transparent;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: all var(--transition);
+  }
+  .mcq-option:hover { border-color: var(--nhs-bright-blue); background: #e4f0f9; }
+  .mcq-option.correct { background: #e6f5ec; border-color: var(--nhs-green); }
+  .mcq-option.incorrect { background: #fef3f2; border-color: var(--nhs-red); }
+  .mcq-option.disabled { pointer-events: none; opacity: 0.7; }
+  .mcq-feedback {
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: var(--border-radius);
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+  }
+  .mcq-feedback.shown { display: block; }
+  .mcq-feedback.pass { background: #e6f5ec; border-left: 3px solid var(--nhs-green); }
+  .mcq-feedback.fail { background: #fef3f2; border-left: 3px solid var(--nhs-red); }
+
+  /* ─── PIPELINE BUILDER ─── */
+  .pipeline-builder {
+    background: var(--nhs-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 24px;
+    margin: 24px 0;
+    border-left: 4px solid var(--nhs-aqua);
+  }
+  .pipeline-builder h3 {
+    color: var(--nhs-dark-blue);
+    margin-bottom: 8px;
+  }
+  .pipeline-builder .desc {
+    color: var(--nhs-dark-grey);
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  .pipeline-stages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 200px;
+    padding: 16px;
+    background: #f8fafb;
+    border: 2px dashed #c8d0d4;
+    border-radius: var(--border-radius);
+    margin-bottom: 16px;
+  }
+  .pipeline-stages.drag-over { border-color: var(--nhs-bright-blue); background: #f0f7fb; }
+  .pipeline-stage {
+    background: var(--nhs-white);
+    border: 1px solid #d8dde0;
+    border-radius: var(--border-radius);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: grab;
+    transition: all var(--transition);
+    font-size: 14px;
+  }
+  .pipeline-stage:active { cursor: grabbing; }
+  .pipeline-stage .stage-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+  .pipeline-stage .stage-label { flex: 1; }
+  .pipeline-stage .drag-handle { color: var(--nhs-mid-grey); cursor: grab; }
+  .pipeline-stage.correct-pos { border-color: var(--nhs-green); background: #f0faf5; }
+  .pipeline-stage.incorrect-pos { border-color: var(--nhs-red); background: #fef8f7; }
+
+  .available-stages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 16px;
+    background: #f8fafb;
+    border-radius: var(--border-radius);
+    margin-bottom: 16px;
+    min-height: 60px;
+  }
+  .available-stage {
+    background: var(--nhs-blue);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: grab;
+    transition: all var(--transition);
+    user-select: none;
+  }
+  .available-stage:hover { background: var(--nhs-dark-blue); }
+  .available-stage:active { cursor: grabbing; transform: scale(0.95); }
+
+  .pipeline-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* ─── CHECKLIST ─── */
+  .checklist-box {
+    background: var(--nhs-white);
+    border: 1px solid #d8dde0;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin: 16px 0;
+  }
+  .checklist-box h4 {
+    color: var(--nhs-dark-blue);
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: 14px;
+  }
+  .check-item input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: var(--nhs-blue);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+  .check-item.checked label { text-decoration: line-through; color: var(--nhs-mid-grey); }
+  .checklist-progress {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--nhs-mid-grey);
+  }
+
+  /* ─── REFERENCES ─── */
+  .ref-list {
+    list-style: none;
+    padding: 0;
+  }
+  .ref-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--nhs-pale-grey);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .ref-list a {
+    color: var(--nhs-blue);
+    text-decoration: none;
+  }
+  .ref-list a:hover { text-decoration: underline; }
+
+  /* ─── SCENARIO BOX ─── */
+  .scenario-box {
+    background: linear-gradient(135deg, #f0f7fb, #e8f4f8);
+    border: 2px solid var(--nhs-light-blue);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin: 20px 0;
+  }
+  .scenario-box h3 {
+    color: var(--nhs-dark-blue);
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+  .scenario-box h3::before { content: "🎯 "; }
+  .scenario-box p {
+    font-size: 14px;
+    color: var(--nhs-dark-grey);
+    line-height: 1.6;
+  }
+
+  /* ─── FOOTER ─── */
+  .site-footer {
+    background: var(--nhs-dark-grey);
+    color: rgba(255,255,255,0.8);
+    padding: 32px 24px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 40px;
+  }
+  .site-footer a { color: var(--nhs-light-blue); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 640px) {
+    .header-inner { flex-direction: column; align-items: flex-start; }
+    .header-nav { width: 100%; }
+    .timer-display { font-size: 48px; }
+    .section-card.open .section-body { padding: 16px; }
+  }
+
+  /* ─── PRINT ─── */
+  @media print {
+    .site-header, .timer-section, .timer-controls, .header-nav { display: none; }
+    .section-card.open .section-body { max-height: none; }
+    .section-body { max-height: none !important; display: block !important; padding: 16px !important; }
+    .reveal-content { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div>
+        <div class="header-title">Clinical Bioinformatics Genomics</div>
+        <div class="header-subtitle">Learning Resource — NGS Pipeline Validation</div>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <a href="#discussion">Discussion</a>
+      <a href="#pipeline">Pipeline Builder</a>
+      <a href="#knowledge">Knowledge Check</a>
+      <a href="#scenario">Scenario</a>
+      <a href="#timer">Practice Timer</a>
+      <a href="#references">References</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <h1>NGS Pipeline Validation</h1>
+  <p>A discussion-driven learning exercise for Clinical Bioinformatics trainees. Work through the scenario, reflect on the questions, and check your understanding — using published national and international guidelines only.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">S-BG-S1 Diagnostic Sequencing</span>
+    <span class="hero-tag">S-BG-S2 Software</span>
+    <span class="hero-tag">S-BG-S4 Service Delivery</span>
+    <span class="hero-tag">S-C1 Professional Foundations</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══ ABOUT THIS RESOURCE ═══ -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">ℹ</span> About this resource</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px; color:var(--nhs-dark-grey); margin-bottom:12px;">
+        This resource is designed to support <strong>discussion and reflection</strong>, not to provide model answers. Each section poses questions for you to consider, drawing on the published guidelines and your training experience. Use it to identify areas you want to explore further with your training officer, assessors, or colleagues.
+      </p>
+      <p style="font-size:14px; color:var(--nhs-dark-grey); margin-bottom:12px;">
+        All content references <strong>publicly available national and international guidelines</strong> only — no local SOPs, site-specific procedures, or proprietary content. The discussion prompts are designed to help you think through problems, not to tell you the answers.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ═══ DISCUSSION SECTIONS ═══ -->
+
+  <div class="section-card" id="discussion">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">1</span> Why validate?</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="discussion-box">
+        <h3>Discussion</h3>
+        <ul>
+          <li>Why is validation necessary before a bioinformatics pipeline can be used in clinical service?</li>
+          <li>What could happen to a patient if a pipeline has not been properly validated?</li>
+          <li>What is the difference between validation and verification? When would each apply?</li>
+          <li>Who are the stakeholders in a validation process, and what are their responsibilities?</li>
+          <li>What published standards or guidelines would you refer to when planning a validation?</li>
+        </ul>
+      </div>
+      <div class="reveal-box">
+        <button class="reveal-btn" onclick="toggleReveal(this)">Considerations to reflect on</button>
+        <div class="reveal-content">
+          <p>Think about how the following relate to validation:</p>
+          <ul>
+            <li><strong>Patient safety</strong> — false negatives could mean a pathogenic variant is missed; false positives could lead to unnecessary clinical interventions</li>
+            <li><strong>Accreditation requirements</strong> — ISO 15189 requires that examination procedures are validated before use. UKAS accreditation depends on this</li>
+            <li><strong>Professional standards</strong> — the HCPC Standards of Proficiency require clinical scientists to understand the importance of quality assurance</li>
+            <li><strong>Validation vs verification</strong> — validation confirms a method is fit for purpose; verification confirms an already-validated method performs as expected in your specific environment</li>
+            <li><strong>Regulatory context</strong> — consider IVDR (In Vitro Diagnostic Regulation) implications for clinical software</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-box guideline">
+        The AMP/CAP 2018 guidelines (Roy et al.) provide 17 consensus recommendations for validating NGS bioinformatics pipelines. The ACGS NGS Bioinformatics Best Practice Guidelines (2016) provide UK-specific guidance including sensitivity thresholds and sample requirements.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">2</span> Planning the validation</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="discussion-box">
+        <h3>Discussion</h3>
+        <ul>
+          <li>What would you need to agree with the genomics scientists before starting validation?</li>
+          <li>How would you determine what the pipeline should detect (scope of the assay)?</li>
+          <li>What types of variants should be included in a validation (think beyond just SNVs)?</li>
+          <li>How would you select appropriate validation samples? What characteristics should they have?</li>
+          <li>How many samples would you need, and how would you justify that number?</li>
+          <li>What is a "gold standard" in this context, and what options are available?</li>
+        </ul>
+      </div>
+      <div class="reveal-box">
+        <button class="reveal-btn" onclick="toggleReveal(this)">Considerations to reflect on</button>
+        <div class="reveal-content">
+          <p>When planning validation, consider:</p>
+          <ul>
+            <li><strong>Requirements gathering</strong> — what variant types does the assay need to detect? What is the intended clinical application (rare disease, cancer, pharmacogenomics)?</li>
+            <li><strong>Variant types</strong> — SNVs, indels, CNVs, structural variants, repeat expansions, mosaicism/somatic variants — each may require different validation approaches</li>
+            <li><strong>Sample selection</strong> — reference materials (e.g. Genome in a Bottle/NIST, Horizon Discovery), previously characterised clinical samples, cell lines</li>
+            <li><strong>Sample numbers</strong> — ACGS guidelines suggest detecting 60/60 known variants gives 95% CI >0.95 for sensitivity; 300/300 gives 95% CI >0.99. Consider the statistical basis for your chosen sample size</li>
+            <li><strong>Coverage and depth</strong> — what minimum coverage threshold is acceptable? How will you determine this? Consider downsampling experiments</li>
+            <li><strong>Comparison method</strong> — orthogonal confirmation (e.g. Sanger sequencing), inter-laboratory comparisons, benchmarking datasets</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-box guideline">
+        The ACGS NGS Bioinformatics BPG states that pipeline sensitivity should be determined using clinical data, with resulting sensitivity having a 95% confidence interval greater than 0.95. Variants should be derived from at least 10 individuals.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">3</span> Validation metrics and analysis</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="discussion-box">
+        <h3>Discussion</h3>
+        <ul>
+          <li>What metrics would you calculate to assess pipeline performance?</li>
+          <li>How would you determine appropriate quality thresholds for the new assay?</li>
+          <li>What is the limit of detection and why is it important — particularly for somatic assays?</li>
+          <li>How would you assess reproducibility? What factors could affect it?</li>
+          <li>How do confidence intervals relate to your validation results, and why do they matter?</li>
+          <li>What would you do if the pipeline did not meet the required performance thresholds?</li>
+        </ul>
+      </div>
+      <div class="reveal-box">
+        <button class="reveal-btn" onclick="toggleReveal(this)">Considerations to reflect on</button>
+        <div class="reveal-content">
+          <ul>
+            <li><strong>Sensitivity (recall)</strong> — proportion of true positives correctly identified. Critical for clinical assays — a missed variant could mean a missed diagnosis</li>
+            <li><strong>Specificity (precision)</strong> — proportion of results that are true positives. False positives create unnecessary follow-up and patient anxiety</li>
+            <li><strong>Confidence intervals</strong> — your sample size determines how confident you can be in your sensitivity/specificity estimates</li>
+            <li><strong>Reproducibility</strong> — intra-run (same run, same sample), inter-run (different runs), inter-operator, inter-site consistency</li>
+            <li><strong>Limit of detection</strong> — especially relevant for somatic variants: what is the lowest variant allele frequency the pipeline can reliably detect?</li>
+            <li><strong>Quality thresholds</strong> — coverage depth, mapping quality, variant quality scores, genotype quality — how are thresholds set and justified?</li>
+            <li><strong>Downsampling experiments</strong> — systematically reducing coverage to determine the minimum depth at which the pipeline still performs acceptably</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">4</span> Documentation and quality management</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="discussion-box">
+        <h3>Discussion</h3>
+        <ul>
+          <li>What documentation should be produced as part of the validation process?</li>
+          <li>How does validation documentation fit within a quality management system?</li>
+          <li>What change control processes should be in place when a validated pipeline is modified?</li>
+          <li>What ongoing quality assurance is needed after a pipeline enters clinical service?</li>
+          <li>How would you approach accreditation requirements (e.g. ISO 15189, UKAS) in the context of a bioinformatics pipeline?</li>
+        </ul>
+      </div>
+      <div class="reveal-box">
+        <button class="reveal-btn" onclick="toggleReveal(this)">Considerations to reflect on</button>
+        <div class="reveal-content">
+          <ul>
+            <li><strong>Validation report</strong> — documenting methods, results, conclusions, and any limitations</li>
+            <li><strong>Standard operating procedures</strong> — for running the pipeline, interpreting outputs, and handling failures</li>
+            <li><strong>User guides and training materials</strong> — for both bioinformaticians and the scientists who will use the outputs</li>
+            <li><strong>Change control</strong> — any modification to a validated pipeline (software updates, reference data changes, parameter adjustments) requires documented assessment and potential revalidation</li>
+            <li><strong>Version control</strong> — tracking pipeline versions, configurations, and dependencies (consider tools like Git, containerisation with Docker/Singularity)</li>
+            <li><strong>Continuous validation</strong> — ongoing monitoring using benchmarking/reference samples run alongside clinical samples</li>
+            <li><strong>EQA participation</strong> — external quality assessment schemes to verify ongoing performance</li>
+            <li><strong>Audit trail</strong> — traceability from raw data through to reported results</li>
+          </ul>
+        </div>
+      </div>
+      <div class="info-box guideline">
+        ISO 15189:2022 requires medical laboratories to validate examination procedures, document validation results, and have procedures for ongoing quality assurance. The ACGS BPG recommends that bioinformatics pipelines should be treated as medical devices for quality management purposes.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">5</span> Training, communication and go-live</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="discussion-box">
+        <h3>Discussion</h3>
+        <ul>
+          <li>Who needs to be trained before the pipeline goes into clinical use, and on what?</li>
+          <li>How would you communicate the pipeline's capabilities and limitations to the clinical team?</li>
+          <li>What steps are needed between completing validation and going live in clinical service?</li>
+          <li>What would you do if issues are discovered after the pipeline enters clinical use?</li>
+          <li>How does this process relate to your professional responsibility as a Clinical Scientist?</li>
+        </ul>
+      </div>
+      <div class="reveal-box">
+        <button class="reveal-btn" onclick="toggleReveal(this)">Considerations to reflect on</button>
+        <div class="reveal-content">
+          <ul>
+            <li><strong>Training scope</strong> — bioinformaticians (running and maintaining the pipeline), laboratory scientists (understanding outputs and limitations), clinical staff (interpreting results in clinical context)</li>
+            <li><strong>Competency documentation</strong> — evidence that users have been trained and assessed as competent</li>
+            <li><strong>Communication</strong> — presenting validation results to stakeholders, explaining limitations clearly, agreeing turnaround times and escalation procedures</li>
+            <li><strong>Go-live checklist</strong> — all documentation complete, training delivered, quality controls in place, SOPs approved, accreditation body notified if required</li>
+            <li><strong>Post-implementation review</strong> — monitoring performance in the initial period, gathering user feedback, identifying issues early</li>
+            <li><strong>Incident management</strong> — clear processes for reporting and investigating issues, including near-misses</li>
+            <li><strong>Professional responsibility</strong> — HCPC Standards of Proficiency, duty to raise concerns, knowing the limits of your competence</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PIPELINE BUILDER ═══ -->
+  <div class="pipeline-builder" id="pipeline">
+    <h3>🔧 Interactive Exercise: Validation Steps</h3>
+    <p class="desc">Drag the stages into what you think is a logical order for validating a new NGS bioinformatics pipeline. Note: this is not a formal framework — these are examples of steps that could be included in a validation process. In practice, the order may vary and some steps may overlap or iterate.</p>
+
+    <p style="font-size:13px; color:var(--nhs-mid-grey); margin-bottom:12px;"><strong>Available stages</strong> — drag these into the pipeline below:</p>
+    <div class="available-stages" id="availableStages"></div>
+
+    <p style="font-size:13px; color:var(--nhs-mid-grey); margin-bottom:8px;"><strong>Your pipeline order:</strong></p>
+    <div class="pipeline-stages" id="pipelineStages"
+      ondrop="dropStage(event)" ondragover="allowDrop(event)" ondragenter="enterDrop(event)" ondragleave="leaveDrop(event)">
+      <p style="color:var(--nhs-mid-grey); font-size:13px; text-align:center; padding:40px 0;" id="pipelinePlaceholder">Drag stages here to build your pipeline...</p>
+    </div>
+
+    <div class="pipeline-controls">
+      <button class="timer-btn primary" onclick="checkPipeline()">✓ Check Order</button>
+      <button class="timer-btn secondary" onclick="resetPipeline()">↺ Reset</button>
+    </div>
+    <div id="pipelineFeedback" style="margin-top:12px;"></div>
+  </div>
+
+  <!-- ═══ SELF-ASSESSMENT CHECKLIST ═══ -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">6</span> Self-assessment: Could you discuss these?</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px; color:var(--nhs-dark-grey); margin-bottom:16px;">Use this checklist to identify areas you feel confident in and areas where you might want to do further reading or discuss with your training officer.</p>
+
+      <div class="checklist-box">
+        <h4>Validation Planning</h4>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Explain why validation is required and its importance for patient safety</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Describe the difference between validation and verification</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Discuss how to gather requirements from clinical stakeholders</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Justify sample selection for a validation study</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Explain the statistical basis for sample size in validation</label></div>
+      </div>
+
+      <div class="checklist-box">
+        <h4>Validation Metrics</h4>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Define and calculate sensitivity and specificity</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Explain confidence intervals and their relevance to validation</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Discuss reproducibility and how to assess it</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Explain limit of detection and its clinical significance</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Describe how coverage thresholds are determined</label></div>
+      </div>
+
+      <div class="checklist-box">
+        <h4>Quality and Documentation</h4>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Describe what a validation report should contain</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Explain change control processes for validated pipelines</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Discuss continuous validation and ongoing QC monitoring</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Relate pipeline validation to ISO 15189 and UKAS accreditation</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Describe EQA participation and its role in quality assurance</label></div>
+      </div>
+
+      <div class="checklist-box">
+        <h4>Professional Practice</h4>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Discuss training requirements for pipeline users</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Explain your professional responsibility in ensuring patient safety</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Describe incident reporting processes for pipeline errors</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Discuss how to communicate pipeline limitations to clinical colleagues</label></div>
+      </div>
+
+      <div class="checklist-progress" id="checklistProgress">0 of 19 areas checked</div>
+    </div>
+  </div>
+
+  <!-- ═══ KNOWLEDGE CHECK MCQs ═══ -->
+  <div class="section-card" id="knowledge">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">7</span> Knowledge Check</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px; color:var(--nhs-dark-grey); margin-bottom:16px;">Test your understanding with these self-assessment questions. These are not FYA questions — they are designed to help you identify gaps in your knowledge.</p>
+
+      <div class="mcq-card" id="mcq1">
+        <h4>Q1. According to ACGS Best Practice Guidelines, what is the minimum sensitivity threshold (95% CI) recommended for an NGS bioinformatics pipeline?</h4>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">A) >0.80</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, true)">B) >0.95</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">C) >0.99</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">D) >0.90</button>
+        <div class="mcq-feedback pass" id="mcq1-pass">Correct. The ACGS guidelines state that the resulting sensitivity should have a 95% confidence interval greater than 0.95, achievable by detecting all 60 of 60 known variants. Detecting 300/300 would achieve >0.99.</div>
+        <div class="mcq-feedback fail" id="mcq1-fail">Not quite. The ACGS guidelines recommend a 95% confidence interval greater than 0.95 for sensitivity. This can be achieved by detecting 60 out of 60 known variants with no false negatives. Review the ACGS NGS Bioinformatics BPG for the statistical rationale.</div>
+      </div>
+
+      <div class="mcq-card" id="mcq2">
+        <h4>Q2. A bioinformatics pipeline has been validated and is in clinical use. A software dependency is updated to a new version. What should happen next?</h4>
+        <button class="mcq-option" onclick="checkMCQ('mcq2', this, false)">A) Continue using the pipeline — minor updates don't affect results</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq2', this, false)">B) Stop the clinical service until a full revalidation is completed</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq2', this, true)">C) Assess the impact of the change through change control, and determine whether revalidation or verification is required</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq2', this, false)">D) Update the SOP to reflect the new version number</button>
+        <div class="mcq-feedback pass" id="mcq2-pass">Correct. Any modification to a validated pipeline requires a documented change control assessment. The impact of the change should be evaluated to determine whether full revalidation, partial revalidation, or verification testing is needed. This is a key quality management requirement.</div>
+        <div class="mcq-feedback fail" id="mcq2-fail">Not quite. Software updates — even minor ones — can affect pipeline outputs. A change control process should assess the impact and determine the appropriate level of revalidation or verification needed. Think about what could change when a dependency is updated.</div>
+      </div>
+
+      <div class="mcq-card" id="mcq3">
+        <h4>Q3. You are selecting samples for validating a pipeline. Which approach best meets published guidelines?</h4>
+        <button class="mcq-option" onclick="checkMCQ('mcq3', this, false)">A) Use 60 synthetic variants generated computationally</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq3', this, false)">B) Use 5 well-characterised reference samples with known variants</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq3', this, true)">C) Use a combination of reference materials and previously characterised clinical samples from at least 10 individuals, covering the range of variant types the pipeline needs to detect</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq3', this, false)">D) Use the Genome in a Bottle reference sample only</button>
+        <div class="mcq-feedback pass" id="mcq3-pass">Correct. The ACGS guidelines recommend variants from at least 10 individuals. A combination of reference materials (e.g. GIAB/NIST) and clinical samples provides both well-characterised truth sets and clinically relevant variant representation. The samples should cover the full range of variant types the pipeline is expected to detect.</div>
+        <div class="mcq-feedback fail" id="mcq3-fail">Not quite. Published guidelines recommend using clinical data from at least 10 individuals. A single reference sample or purely computational variants would not adequately validate clinical performance. Consider why diversity of samples and variant types matters for a robust validation.</div>
+      </div>
+
+      <div class="mcq-card" id="mcq4">
+        <h4>Q4. You are validating a pipeline and need to determine the limit of detection (LOD). What does the limit of detection represent in the context of an NGS bioinformatics pipeline?</h4>
+        <button class="mcq-option" onclick="checkMCQ('mcq4', this, false)">A) The minimum number of samples required to achieve statistically significant validation results</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq4', this, false)">B) The minimum sequencing coverage depth at which the pipeline can be run</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq4', this, true)">C) The lowest variant allele frequency at which the pipeline can reliably detect a variant</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq4', this, false)">D) The smallest gene panel size that the pipeline supports</button>
+        <div class="mcq-feedback pass" id="mcq4-pass">Correct. The limit of detection is the lowest variant allele frequency (VAF) at which the pipeline can reliably identify a variant. This is particularly critical for somatic pipelines where tumour heterogeneity and sample purity mean variants may be present at low allele frequencies, but it is also relevant for germline pipelines when considering mosaicism or low-quality samples. Determining LOD typically involves serial dilution or in silico downsampling experiments.</div>
+        <div class="mcq-feedback fail" id="mcq4-fail">Not quite. The limit of detection refers to the lowest variant allele frequency at which the pipeline can reliably call a variant. This is distinct from coverage depth (which affects LOD but is not the same thing) and from sample size requirements. Understanding LOD is important because it defines the boundary of what your pipeline can and cannot detect — variants below this threshold may be missed, with direct implications for patient care.</div>
+      </div>
+
+      <div class="mcq-card" id="mcq5">
+        <h4>Q5. Which quality standard requires medical laboratories to validate examination procedures before clinical use?</h4>
+        <button class="mcq-option" onclick="checkMCQ('mcq5', this, false)">A) ISO 27001</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq5', this, true)">B) ISO 15189</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq5', this, false)">C) ISO 9001</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq5', this, false)">D) ISO 14001</button>
+        <div class="mcq-feedback pass" id="mcq5-pass">Correct. ISO 15189 (Medical laboratories — Requirements for quality and competence) is the standard that requires medical laboratories to validate examination procedures and is the basis for UKAS accreditation of clinical laboratories in the UK.</div>
+        <div class="mcq-feedback fail" id="mcq5-fail">Not quite. ISO 15189 is the relevant standard for medical laboratory quality and competence. ISO 27001 relates to information security, ISO 9001 to general quality management, and ISO 14001 to environmental management. Understanding which standards apply to clinical laboratory work is part of professional foundations.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCENARIO ═══ -->
+  <div class="section-card" id="scenario">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">8</span> Practice Scenario</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px; color:var(--nhs-dark-grey); margin-bottom:16px;">Now that you've worked through the discussion sections and knowledge check, use this scenario to bring everything together. Read the scenario, then use the practice timer below to simulate a timed response.</p>
+      <div class="scenario-box">
+        <h3>New NGS Assay Validation</h3>
+        <p>The bioinformatics team is developing a new analysis pipeline for a new NGS assay being introduced in the laboratory. You are representing the bioinformatics team in a meeting with Clinical Scientists from genomics to plan the validation.</p>
+        <p style="margin-top:10px;"><strong>Describe the validation process that should be followed, and any other steps required to ensure the new pipeline is safe for use in a clinical service.</strong></p>
+      </div>
+      <p style="font-size:14px; color:var(--nhs-dark-grey); margin-top:16px;">
+        This scenario is representative of the type of situation a newly qualified Clinical Scientist in Bioinformatics would encounter in practice. Consider: <em>what would you want to discuss in that meeting?</em>
+      </p>
+      <div class="info-box patient-safety">
+        An improperly validated pipeline can generate inaccurate results that directly affect patient care. Validation is not just a bureaucratic step — it is a patient safety requirement.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PRACTICE TIMER ═══ -->
+  <div class="timer-section" id="timer">
+    <h2>⏱ Practice Timer</h2>
+    <p class="timer-desc">Simulate the FYA format: 3 minutes pre-reading, then 9 minutes to talk through your response. Use this to practise structuring your thoughts under time pressure.</p>
+    <div class="timer-phase" id="timerPhase">Press Start to begin</div>
+    <div class="timer-display" id="timerDisplay">03:00</div>
+    <div class="timer-progress"><div class="timer-progress-bar" id="timerBar" style="width:100%"></div></div>
+    <div class="timer-controls" style="margin-top:16px;">
+      <button class="timer-btn primary" id="timerStart" onclick="startTimer()">▶ Start Pre-Reading (3 min)</button>
+      <button class="timer-btn secondary" onclick="skipToResponse()">⏩ Skip to Response</button>
+      <button class="timer-btn danger" onclick="resetTimer()">⏹ Reset</button>
+    </div>
+  </div>
+
+  <!-- ═══ REFERENCES ═══ -->
+  <div class="section-card" id="references">
+    <div class="section-header" onclick="toggleSection(this)">
+      <h2><span class="section-num">9</span> Published References and Further Reading</h2>
+      <span class="section-toggle">▼</span>
+    </div>
+    <div class="section-body">
+      <p style="font-size:14px; color:var(--nhs-dark-grey); margin-bottom:16px;">All content in this resource is based on or relates to the following publicly available guidelines, standards, and publications.</p>
+
+      <h4 style="color:var(--nhs-dark-blue); margin-bottom:8px;">UK Guidelines</h4>
+      <ul class="ref-list">
+        <li><a href="https://www.acgs.uk.com/media/10790/ngs_bioinformatics_bpg_final_version_2016.pdf" target="_blank">ACGS Best Practice Guidelines for NGS Bioinformatics (2016)</a> — UK-specific guidance on pipeline development, validation, sensitivity thresholds, and sample requirements</li>
+        <li><a href="https://www.acgs.uk.com/quality/best-practice-guidelines/" target="_blank">ACGS Best Practice Guidelines — full collection</a> — Including variant classification guidelines (2024), oncogenicity classification, and specialty-specific guidance</li>
+        <li><a href="https://www.genomicseducation.hee.nhs.uk/" target="_blank">Genomics Education Programme (NHS England)</a> — Educational resources for genomics in healthcare</li>
+      </ul>
+
+      <h4 style="color:var(--nhs-dark-blue); margin: 16px 0 8px;">International Guidelines</h4>
+      <ul class="ref-list">
+        <li><a href="https://pubmed.ncbi.nlm.nih.gov/29154853/" target="_blank">Roy et al. (2018) — AMP/CAP Standards and Guidelines for Validating NGS Bioinformatics Pipelines</a> — 17 consensus recommendations covering pipeline design, development, and clinical validation</li>
+        <li><a href="https://link.springer.com/article/10.1186/s13073-025-01543-4" target="_blank">NACG (2025) — Recommendations for bioinformatics in clinical practice</a> — Nordic Alliance consensus on standardising bioinformatics practices</li>
+      </ul>
+
+      <h4 style="color:var(--nhs-dark-blue); margin: 16px 0 8px;">Standards</h4>
+      <ul class="ref-list">
+        <li><strong>ISO 15189:2022</strong> — Medical laboratories: Requirements for quality and competence</li>
+        <li><strong>ISO/TS 23357:2023</strong> — Molecular in vitro diagnostic examinations: Specifications for pre-examination processes for sequencing</li>
+      </ul>
+
+      <h4 style="color:var(--nhs-dark-blue); margin: 16px 0 8px;">Other Relevant Standards</h4>
+      <ul class="ref-list">
+        <li><strong>ISO 27001:2022</strong> — Information Security Management Systems</li>
+        <li><strong>ISO 13485:2016</strong> — Medical Devices — Quality management systems</li>
+        <li><a href="https://www.ga4gh.org/genomic-data-toolkit/" target="_blank">GA4GH (Global Alliance for Genomic Health)</a> — Technical standards for genomic data representation</li>
+        <li><a href="https://www.hcpc-uk.org/standards/standards-of-proficiency/" target="_blank">HCPC Standards of Proficiency</a> — Standards for clinical scientists</li>
+      </ul>
+
+      <h4 style="color:var(--nhs-dark-blue); margin: 16px 0 8px;">NSHCS Curriculum</h4>
+      <ul class="ref-list">
+        <li><a href="https://curriculumlibrary.nshcs.org.uk/stp/specialty/SBI1-1-22/" target="_blank">Clinical Bioinformatics Genomics Curriculum (SBI1-1-22)</a> — Full module structure, learning outcomes, and training activities</li>
+        <li><a href="https://nshcs.hee.nhs.uk/programmes/nshcs-work-based-assessment-standards/" target="_blank">NSHCS Work-Based Assessment Standards</a> — Guidance on DOPS, OCEs, and CBDs</li>
+        <li><a href="https://nshcs.hee.nhs.uk/programmes/stp/the-stp-final-year-assessment/" target="_blank">STP Final Year Assessment guidance</a></li>
+      </ul>
+
+      <h4 style="color:var(--nhs-dark-blue); margin: 16px 0 8px;">Tools for Validation</h4>
+      <ul class="ref-list">
+        <li><a href="https://github.com/RealTimeGenomics/rtg-tools" target="_blank">RTG Tools (RealTimeGenomics/rtg-tools)</a> — Utilities for accurate VCF comparison and manipulation</li>
+        <li><a href="https://www.medcalc.org/calc/diagnostic_test.php" target="_blank">MedCalc Diagnostic Test Evaluation Calculator</a> — Free online statistical calculator for sensitivity, specificity and confidence intervals</li>
+        <li><a href="https://github.com/Illumina/hap.py" target="_blank">hap.py (Illumina/hap.py)</a> — Haplotype VCF comparison tools</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  <p><strong>Clinical Bioinformatics Genomics — Learning Resource</strong></p>
+  <p>This resource is for educational discussion and self-directed learning only. It does not contain model answers or local procedures. Content is based on publicly available guidelines and the NSHCS curriculum.</p>
+  <p style="margin-top:8px;">All references are to publicly available, published documents. No patient-identifiable or commercially sensitive information is included.</p>
+  <p style="margin-top:8px;">Built with GitHub Pages · Content should be reviewed when guidelines are updated · <a href="https://github.com" target="_blank">Contribute via GitHub</a></p>
+</footer>
+
+<script>
+// ─── SECTION TOGGLE ───
+function toggleSection(header) {
+  const card = header.closest('.section-card');
+  card.classList.toggle('open');
+}
+
+// ─── REVEAL TOGGLE ───
+function toggleReveal(btn) {
+  const content = btn.nextElementSibling;
+  content.classList.toggle('shown');
+  btn.textContent = content.classList.contains('shown') ? '🔍 Hide considerations' : '🔍 Considerations to reflect on';
+}
+
+// ─── TIMER ───
+let timerInterval = null;
+let timerSeconds = 180;
+let timerPhase = 'idle'; // idle, preread, response
+const PREREAD_SECS = 180;
+const RESPONSE_SECS = 540;
+
+function updateTimerDisplay() {
+  const mins = Math.floor(timerSeconds / 60);
+  const secs = timerSeconds % 60;
+  const display = document.getElementById('timerDisplay');
+  display.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+  display.className = 'timer-display';
+  if (timerSeconds <= 60 && timerSeconds > 30) display.classList.add('warning');
+  if (timerSeconds <= 30) display.classList.add('critical');
+
+  const totalSecs = timerPhase === 'preread' ? PREREAD_SECS : RESPONSE_SECS;
+  const pct = (timerSeconds / totalSecs) * 100;
+  document.getElementById('timerBar').style.width = pct + '%';
+}
+
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerPhase = 'preread';
+  timerSeconds = PREREAD_SECS;
+  document.getElementById('timerPhase').textContent = '📖 Pre-Reading Phase — Review the scenario and plan your response';
+  document.getElementById('timerStart').disabled = true;
+  updateTimerDisplay();
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 0) {
+      if (timerPhase === 'preread') {
+        timerPhase = 'response';
+        timerSeconds = RESPONSE_SECS;
+        document.getElementById('timerPhase').textContent = '🎙 Response Phase — Talk through your answer now';
+        document.getElementById('timerBar').style.background = 'var(--nhs-green)';
+      } else {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        document.getElementById('timerPhase').textContent = '⏰ Time is up! How did you do?';
+        document.getElementById('timerStart').disabled = false;
+      }
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function skipToResponse() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerPhase = 'response';
+  timerSeconds = RESPONSE_SECS;
+  document.getElementById('timerPhase').textContent = '🎙 Response Phase — Talk through your answer now';
+  document.getElementById('timerBar').style.background = 'var(--nhs-green)';
+  updateTimerDisplay();
+
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      document.getElementById('timerPhase').textContent = '⏰ Time is up! How did you do?';
+      document.getElementById('timerStart').disabled = false;
+    }
+    updateTimerDisplay();
+  }, 1000);
+}
+
+function resetTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  timerPhase = 'idle';
+  timerSeconds = PREREAD_SECS;
+  document.getElementById('timerPhase').textContent = 'Press Start to begin';
+  document.getElementById('timerDisplay').className = 'timer-display';
+  document.getElementById('timerBar').style.width = '100%';
+  document.getElementById('timerBar').style.background = 'var(--nhs-blue)';
+  document.getElementById('timerStart').disabled = false;
+  updateTimerDisplay();
+}
+
+// ─── MCQ ───
+function checkMCQ(id, btn, isCorrect) {
+  const card = document.getElementById(id);
+  const options = card.querySelectorAll('.mcq-option');
+  options.forEach(o => {
+    o.classList.add('disabled');
+    o.classList.remove('correct','incorrect');
+  });
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    const fb = document.getElementById(id + '-pass');
+    fb.classList.add('shown');
+  } else {
+    btn.classList.add('incorrect');
+    // highlight the correct one
+    options.forEach(o => {
+      if (o.onclick && o.onclick.toString().includes('true')) o.classList.add('correct');
+    });
+    const fb = document.getElementById(id + '-fail');
+    fb.classList.add('shown');
+  }
+}
+
+// ─── PIPELINE BUILDER ───
+const PIPELINE_STAGES = [
+  { id: 'req', label: 'Gather requirements from clinical stakeholders', color: '#005eb8' },
+  { id: 'design', label: 'Design pipeline architecture and select tools', color: '#0072ce' },
+  { id: 'dev', label: 'Develop pipeline with version control and testing', color: '#41b6e6' },
+  { id: 'samples', label: 'Select and prepare validation samples', color: '#00a499' },
+  { id: 'validate', label: 'Execute validation study and collect metrics', color: '#009639' },
+  { id: 'analyse', label: 'Analyse results — sensitivity, specificity, LOD', color: '#78be20' },
+  { id: 'doc', label: 'Document validation report and SOPs', color: '#ed8b00' },
+  { id: 'train', label: 'Train users and assess competency', color: '#ae2573' },
+  { id: 'golive', label: 'Go live with ongoing QC and monitoring', color: '#da291c' },
+];
+
+let pipelineOrder = [];
+
+function initPipeline() {
+  const container = document.getElementById('availableStages');
+  const shuffled = [...PIPELINE_STAGES].sort(() => Math.random() - 0.5);
+  container.innerHTML = '';
+  shuffled.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'available-stage';
+    el.draggable = true;
+    el.dataset.id = s.id;
+    el.textContent = s.label;
+    el.style.background = s.color;
+    el.ondragstart = (e) => {
+      e.dataTransfer.setData('text/plain', s.id);
+      e.dataTransfer.effectAllowed = 'move';
+    };
+    // Touch support
+    el.onclick = () => addStageToPipeline(s.id);
+    container.appendChild(el);
+  });
+  pipelineOrder = [];
+  document.getElementById('pipelineStages').innerHTML = '<p style="color:var(--nhs-mid-grey); font-size:13px; text-align:center; padding:40px 0;" id="pipelinePlaceholder">Drag stages here or click them to add...</p>';
+  document.getElementById('pipelineFeedback').innerHTML = '';
+}
+
+function addStageToPipeline(stageId) {
+  if (pipelineOrder.includes(stageId)) return;
+  const stage = PIPELINE_STAGES.find(s => s.id === stageId);
+  if (!stage) return;
+
+  pipelineOrder.push(stageId);
+
+  // Remove from available
+  const avail = document.getElementById('availableStages');
+  const el = avail.querySelector(`[data-id="${stageId}"]`);
+  if (el) el.remove();
+
+  // Add to pipeline
+  const container = document.getElementById('pipelineStages');
+  const placeholder = document.getElementById('pipelinePlaceholder');
+  if (placeholder) placeholder.remove();
+
+  const div = document.createElement('div');
+  div.className = 'pipeline-stage';
+  div.dataset.id = stageId;
+  div.innerHTML = `<span class="stage-icon" style="background:${stage.color}">${pipelineOrder.length}</span><span class="stage-label">${stage.label}</span><span class="drag-handle" onclick="removeStage('${stageId}')" style="cursor:pointer;color:var(--nhs-red);font-size:16px;" title="Remove">✕</span>`;
+  container.appendChild(div);
+}
+
+function removeStage(stageId) {
+  pipelineOrder = pipelineOrder.filter(id => id !== stageId);
+  const stage = PIPELINE_STAGES.find(s => s.id === stageId);
+
+  // Remove from pipeline
+  const container = document.getElementById('pipelineStages');
+  const el = container.querySelector(`[data-id="${stageId}"]`);
+  if (el) el.remove();
+
+  // Add back to available
+  const avail = document.getElementById('availableStages');
+  const newEl = document.createElement('div');
+  newEl.className = 'available-stage';
+  newEl.draggable = true;
+  newEl.dataset.id = stage.id;
+  newEl.textContent = stage.label;
+  newEl.style.background = stage.color;
+  newEl.ondragstart = (e) => {
+    e.dataTransfer.setData('text/plain', stage.id);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+  newEl.onclick = () => addStageToPipeline(stage.id);
+  avail.appendChild(newEl);
+
+  // Renumber
+  renumberPipeline();
+
+  if (pipelineOrder.length === 0) {
+    container.innerHTML = '<p style="color:var(--nhs-mid-grey); font-size:13px; text-align:center; padding:40px 0;" id="pipelinePlaceholder">Drag stages here or click them to add...</p>';
+  }
+}
+
+function renumberPipeline() {
+  const container = document.getElementById('pipelineStages');
+  const stages = container.querySelectorAll('.pipeline-stage');
+  stages.forEach((s, i) => {
+    const icon = s.querySelector('.stage-icon');
+    if (icon) icon.textContent = i + 1;
+  });
+}
+
+function allowDrop(e) { e.preventDefault(); }
+function enterDrop(e) { e.currentTarget.classList.add('drag-over'); }
+function leaveDrop(e) { e.currentTarget.classList.remove('drag-over'); }
+function dropStage(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  const stageId = e.dataTransfer.getData('text/plain');
+  addStageToPipeline(stageId);
+}
+
+function checkPipeline() {
+  const correctOrder = PIPELINE_STAGES.map(s => s.id);
+  const container = document.getElementById('pipelineStages');
+  const stages = container.querySelectorAll('.pipeline-stage');
+  let correct = 0;
+
+  stages.forEach((s, i) => {
+    s.classList.remove('correct-pos', 'incorrect-pos');
+    if (s.dataset.id === correctOrder[i]) {
+      s.classList.add('correct-pos');
+      correct++;
+    } else {
+      s.classList.add('incorrect-pos');
+    }
+  });
+
+  const fb = document.getElementById('pipelineFeedback');
+  if (pipelineOrder.length < PIPELINE_STAGES.length) {
+    fb.innerHTML = `<div class="info-box" style="border-left-color:var(--nhs-orange);background:#fff8e8;">You've placed ${pipelineOrder.length} of ${PIPELINE_STAGES.length} stages. Add all stages before checking.</div>`;
+  } else if (correct === PIPELINE_STAGES.length) {
+    fb.innerHTML = `<div class="info-box" style="border-left-color:var(--nhs-green);background:#e6f5ec;">All stages in the correct order. Note that in practice, some of these stages may overlap or iterate — validation is not always perfectly linear.</div>`;
+  } else {
+    fb.innerHTML = `<div class="info-box" style="border-left-color:var(--nhs-orange);background:#fff8e8;">${correct} of ${PIPELINE_STAGES.length} stages in the expected position. Green stages are correct, red stages are in a different position than expected. Consider: what depends on what? What needs to happen before you can validate?</div>`;
+  }
+}
+
+function resetPipeline() { initPipeline(); }
+
+// ─── CHECKLIST ───
+function updateChecklist(checkbox) {
+  const item = checkbox.closest('.check-item');
+  item.classList.toggle('checked', checkbox.checked);
+
+  const total = document.querySelectorAll('.check-item input[type="checkbox"]').length;
+  const checked = document.querySelectorAll('.check-item input[type="checkbox"]:checked').length;
+  document.getElementById('checklistProgress').textContent = `${checked} of ${total} areas checked — ${checked === total ? 'Great coverage!' : 'Keep going!'}`;
+}
+
+// ─── INIT ───
+document.addEventListener('DOMContentLoaded', () => {
+  initPipeline();
+});
+</script>
+
+</body>
+</html>
