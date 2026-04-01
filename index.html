@@ -701,7 +701,7 @@
           <p>Think about how the following relate to validation:</p>
           <ul>
             <li><strong>Patient safety</strong> — false negatives could mean a pathogenic variant is missed; false positives could lead to unnecessary clinical interventions</li>
-            <li><strong>Accreditation requirements</strong> — ISO 15189 requires that examination procedures are validated before use. UKAS accreditation depends on this</li>
+            <li><strong>Accreditation requirements</strong> — ISO 15189:2022 requires that examination procedures are validated before use. UKAS accreditation depends on this</li>
             <li><strong>Professional standards</strong> — the HCPC Standards of Proficiency require clinical scientists to understand the importance of quality assurance</li>
             <li><strong>Validation vs verification</strong> — validation confirms a method is fit for purpose; verification confirms an already-validated method performs as expected in your specific environment</li>
             <li><strong>Regulatory context</strong> — consider IVDR (In Vitro Diagnostic Regulation) implications for clinical software</li>
@@ -739,7 +739,7 @@
             <li><strong>Requirements gathering</strong> — what variant types does the assay need to detect? What is the intended clinical application (rare disease, cancer, pharmacogenomics)?</li>
             <li><strong>Variant types</strong> — SNVs, indels, CNVs, structural variants, repeat expansions, mosaicism/somatic variants — each may require different validation approaches</li>
             <li><strong>Sample selection</strong> — reference materials (e.g. Genome in a Bottle/NIST, Horizon Discovery), previously characterised clinical samples, cell lines</li>
-            <li><strong>Sample numbers</strong> — ACGS guidelines suggest detecting 60/60 known variants gives 95% CI >0.95 for sensitivity; 300/300 gives 95% CI >0.99. Consider the statistical basis for your chosen sample size</li>
+            <li><strong>Sample numbers</strong> — Consider the statistical basis for your chosen sample size to achieve required Confidence Intervals</li>
             <li><strong>Coverage and depth</strong> — what minimum coverage threshold is acceptable? How will you determine this? Consider downsampling experiments</li>
             <li><strong>Comparison method</strong> — orthogonal confirmation (e.g. Sanger sequencing), inter-laboratory comparisons, benchmarking datasets</li>
           </ul>
@@ -772,8 +772,14 @@
         <button class="reveal-btn" onclick="toggleReveal(this)">Considerations to reflect on</button>
         <div class="reveal-content">
           <ul>
-            <li><strong>Sensitivity (recall)</strong> — proportion of true positives correctly identified. Critical for clinical assays — a missed variant could mean a missed diagnosis</li>
-            <li><strong>Specificity (precision)</strong> — proportion of results that are true positives. False positives create unnecessary follow-up and patient anxiety</li>
+            <li><strong>Sensitivity (True Positive Rate)</strong> — probability that the test result will be positive when the variant is present. Sensitivity = a/(a+b) i.e. TP/(TP+FN). A missed variant could mean a missed diagnosis</li>
+            <li><strong>Specificity (True Negative Rate)</strong> — probability that the test result will be negative when the variant is not present. Specificity = d/(c+d) i.e. TN/(TN+FP)</li>
+            <li><strong>Precision (Positive Predictive Value)</strong> — probability that the variant is truly present when the test is positive. PPV = (Sensitivity × Prevalence) / (Sensitivity × Prevalence + (1−Specificity) × (1−Prevalence))</li>
+            <li><strong>Negative Predictive Value (NPV)</strong> — probability that the variant is truly not present when the test is negative. NPV = (Specificity × (1−Prevalence)) / ((1−Sensitivity) × Prevalence + Specificity × (1−Prevalence))</li>
+            <li><strong>Positive Likelihood Ratio (LR+)</strong> — ratio between the probability of a positive result given the presence of the variant and the probability of a positive result given its absence. LR+ = Sensitivity / (1−Specificity)</li>
+            <li><strong>Negative Likelihood Ratio (LR−)</strong> — ratio between the probability of a negative result given the presence of the variant and the probability of a negative result given its absence. LR− = (1−Sensitivity) / Specificity</li>
+            <li><strong>F1 Score</strong> — harmonic mean of precision and recall. F1 = 2 × (Precision × Recall) / (Precision + Recall). Balances both concerns</li>
+            <li><strong>Accuracy</strong> — overall probability that a result is correctly classified. Accuracy = Sensitivity × Prevalence + Specificity × (1−Prevalence). Can be misleading with imbalanced classes</li>
             <li><strong>Confidence intervals</strong> — your sample size determines how confident you can be in your sensitivity/specificity estimates</li>
             <li><strong>Reproducibility</strong> — intra-run (same run, same sample), inter-run (different runs), inter-operator, inter-site consistency</li>
             <li><strong>Limit of detection</strong> — especially relevant for somatic variants: what is the lowest variant allele frequency the pipeline can reliably detect?</li>
@@ -798,7 +804,7 @@
           <li>How does validation documentation fit within a quality management system?</li>
           <li>What change control processes should be in place when a validated pipeline is modified?</li>
           <li>What ongoing quality assurance is needed after a pipeline enters clinical service?</li>
-          <li>How would you approach accreditation requirements (e.g. ISO 15189, UKAS) in the context of a bioinformatics pipeline?</li>
+          <li>How would you approach accreditation requirements (e.g. ISO 15189:2022, UKAS) in the context of a bioinformatics pipeline?</li>
         </ul>
       </div>
       <div class="reveal-box">
@@ -909,7 +915,7 @@
         <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Describe what a validation report should contain</label></div>
         <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Explain change control processes for validated pipelines</label></div>
         <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Discuss continuous validation and ongoing QC monitoring</label></div>
-        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Relate pipeline validation to ISO 15189 and UKAS accreditation</label></div>
+        <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Relate pipeline validation to ISO 15189:2022 and UKAS accreditation</label></div>
         <div class="check-item"><input type="checkbox" onchange="updateChecklist(this)"><label>Describe EQA participation and its role in quality assurance</label></div>
       </div>
 
@@ -977,11 +983,11 @@
       <div class="mcq-card" id="mcq5">
         <h4>Q5. Which quality standard requires medical laboratories to validate examination procedures before clinical use?</h4>
         <button class="mcq-option" onclick="checkMCQ('mcq5', this, false)">A) ISO 27001</button>
-        <button class="mcq-option" onclick="checkMCQ('mcq5', this, true)">B) ISO 15189</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq5', this, true)">B) ISO 15189:2022</button>
         <button class="mcq-option" onclick="checkMCQ('mcq5', this, false)">C) ISO 9001</button>
         <button class="mcq-option" onclick="checkMCQ('mcq5', this, false)">D) ISO 14001</button>
-        <div class="mcq-feedback pass" id="mcq5-pass">Correct. ISO 15189 (Medical laboratories — Requirements for quality and competence) is the standard that requires medical laboratories to validate examination procedures and is the basis for UKAS accreditation of clinical laboratories in the UK.</div>
-        <div class="mcq-feedback fail" id="mcq5-fail">Not quite. ISO 15189 is the relevant standard for medical laboratory quality and competence. ISO 27001 relates to information security, ISO 9001 to general quality management, and ISO 14001 to environmental management. Understanding which standards apply to clinical laboratory work is part of professional foundations.</div>
+        <div class="mcq-feedback pass" id="mcq5-pass">Correct. ISO 15189:2022 (Medical laboratories — Requirements for quality and competence) is the standard that requires medical laboratories to validate examination procedures and is the basis for UKAS accreditation of clinical laboratories in the UK.</div>
+        <div class="mcq-feedback fail" id="mcq5-fail">Not quite. ISO 15189:2022 is the relevant standard for medical laboratory quality and competence. ISO 27001 relates to information security, ISO 9001 to general quality management, and ISO 14001 to environmental management. Understanding which standards apply to clinical laboratory work is part of professional foundations.</div>
       </div>
     </div>
   </div>
@@ -1070,6 +1076,7 @@
         <li><a href="https://github.com/RealTimeGenomics/rtg-tools" target="_blank">RTG Tools (RealTimeGenomics/rtg-tools)</a> — Utilities for accurate VCF comparison and manipulation</li>
         <li><a href="https://www.medcalc.org/calc/diagnostic_test.php" target="_blank">MedCalc Diagnostic Test Evaluation Calculator</a> — Free online statistical calculator for sensitivity, specificity and confidence intervals</li>
         <li><a href="https://github.com/Illumina/hap.py" target="_blank">hap.py (Illumina/hap.py)</a> — Haplotype VCF comparison tools</li>
+        <li><a href="https://www.statistics.tools/confusion-matrix-calculator/" target="_blank">Confusion Matrix Calculator (Statistics.tools)</a> — Online calculator for confusion matrix metrics</li>
       </ul>
     </div>
   </div>
@@ -1233,6 +1240,7 @@ function initPipeline() {
     el.ondragstart = (e) => {
       e.dataTransfer.setData('text/plain', s.id);
       e.dataTransfer.effectAllowed = 'move';
+      window._dragSource = 'available';
     };
     // Touch support
     el.onclick = () => addStageToPipeline(s.id);
@@ -1260,11 +1268,62 @@ function addStageToPipeline(stageId) {
   const placeholder = document.getElementById('pipelinePlaceholder');
   if (placeholder) placeholder.remove();
 
+  const div = createPipelineStageEl(stage, pipelineOrder.length);
+  container.appendChild(div);
+}
+
+function createPipelineStageEl(stage, num) {
   const div = document.createElement('div');
   div.className = 'pipeline-stage';
-  div.dataset.id = stageId;
-  div.innerHTML = `<span class="stage-icon" style="background:${stage.color}">${pipelineOrder.length}</span><span class="stage-label">${stage.label}</span><span class="drag-handle" onclick="removeStage('${stageId}')" style="cursor:pointer;color:var(--nhs-red);font-size:16px;" title="Remove">✕</span>`;
-  container.appendChild(div);
+  div.dataset.id = stage.id;
+  div.draggable = true;
+  div.innerHTML = `<span class="stage-icon" style="background:${stage.color}">${num}</span><span class="stage-label">${stage.label}</span><span class="drag-handle" onclick="removeStage('${stage.id}')" style="cursor:pointer;color:var(--nhs-red);font-size:16px;" title="Remove">✕</span>`;
+
+  // Drag events for reordering within the pipeline
+  div.ondragstart = (e) => {
+    e.dataTransfer.setData('text/plain', stage.id);
+    e.dataTransfer.effectAllowed = 'move';
+    div.style.opacity = '0.4';
+    window._dragSource = 'pipeline';
+  };
+  div.ondragend = () => { div.style.opacity = '1'; };
+  div.ondragover = (e) => {
+    e.preventDefault();
+    div.style.borderTop = '3px solid var(--nhs-bright-blue)';
+  };
+  div.ondragleave = () => { div.style.borderTop = ''; };
+  div.ondrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    div.style.borderTop = '';
+    const draggedId = e.dataTransfer.getData('text/plain');
+
+    if (window._dragSource === 'pipeline' && pipelineOrder.includes(draggedId)) {
+      // Reorder within pipeline
+      const fromIdx = pipelineOrder.indexOf(draggedId);
+      const toIdx = pipelineOrder.indexOf(stage.id);
+      if (fromIdx !== toIdx) {
+        pipelineOrder.splice(fromIdx, 1);
+        pipelineOrder.splice(toIdx, 0, draggedId);
+        rebuildPipelineDOM();
+      }
+    } else {
+      // New stage dropped onto an existing stage — insert before it
+      addStageToPipeline(draggedId);
+    }
+  };
+
+  return div;
+}
+
+function rebuildPipelineDOM() {
+  const container = document.getElementById('pipelineStages');
+  container.innerHTML = '';
+  pipelineOrder.forEach((id, i) => {
+    const stage = PIPELINE_STAGES.find(s => s.id === id);
+    const div = createPipelineStageEl(stage, i + 1);
+    container.appendChild(div);
+  });
 }
 
 function removeStage(stageId) {
@@ -1287,6 +1346,7 @@ function removeStage(stageId) {
   newEl.ondragstart = (e) => {
     e.dataTransfer.setData('text/plain', stage.id);
     e.dataTransfer.effectAllowed = 'move';
+    window._dragSource = 'available';
   };
   newEl.onclick = () => addStageToPipeline(stage.id);
   avail.appendChild(newEl);
