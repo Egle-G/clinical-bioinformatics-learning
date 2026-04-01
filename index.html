@@ -858,7 +858,8 @@
   <!-- ═══ PIPELINE BUILDER ═══ -->
   <div class="pipeline-builder" id="pipeline">
     <h3>🔧 Interactive Exercise: Validation Steps</h3>
-    <p class="desc">Drag the stages into what you think is a logical order for validating a new NGS bioinformatics pipeline. Note: this is not a formal framework — these are examples of steps that could be included in a validation process. In practice, the order may vary and some steps may overlap or iterate.</p>
+    <p class="desc">Drag the stages into what you think is a logical order for validating a new NGS bioinformatics pipeline.</p>
+    <p class="desc" style="margin-top:8px;"><strong>Note: this is not a formal framework — these are examples of steps that could be included in a validation process. In practice, the order may vary and some steps may overlap or iterate.</strong></p>
 
     <p style="font-size:13px; color:var(--nhs-mid-grey); margin-bottom:12px;"><strong>Available stages</strong> — drag these into the pipeline below:</p>
     <div class="available-stages" id="availableStages"></div>
@@ -934,13 +935,13 @@
       <p style="font-size:14px; color:var(--nhs-dark-grey); margin-bottom:16px;">Test your understanding with these self-assessment questions. These are not FYA questions — they are designed to help you identify gaps in your knowledge.</p>
 
       <div class="mcq-card" id="mcq1">
-        <h4>Q1. According to ACGS Best Practice Guidelines, what is the minimum sensitivity threshold (95% CI) recommended for an NGS bioinformatics pipeline?</h4>
-        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">A) >0.80</button>
-        <button class="mcq-option" onclick="checkMCQ('mcq1', this, true)">B) >0.95</button>
-        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">C) >0.99</button>
-        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">D) >0.90</button>
-        <div class="mcq-feedback pass" id="mcq1-pass">Correct. The ACGS guidelines state that the resulting sensitivity should have a 95% confidence interval greater than 0.95, achievable by detecting all 60 of 60 known variants. Detecting 300/300 would achieve >0.99.</div>
-        <div class="mcq-feedback fail" id="mcq1-fail">Not quite. The ACGS guidelines recommend a 95% confidence interval greater than 0.95 for sensitivity. This can be achieved by detecting 60 out of 60 known variants with no false negatives. Review the ACGS NGS Bioinformatics BPG for the statistical rationale.</div>
+        <h4>Q1. You have completed a validation study for a new NGS bioinformatics pipeline. Which of the following best describes what should be included in the validation documentation?</h4>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">A) A summary of the results confirming the pipeline passed, signed off by the training officer</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">B) The validation report only — SOPs and training records are managed separately and are not part of validation documentation</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, true)">C) A validation report detailing methods, sample selection, results, limitations, and conclusions, alongside SOPs, user training records, and evidence of change control approval</button>
+        <button class="mcq-option" onclick="checkMCQ('mcq1', this, false)">D) Screenshots of the pipeline output for each validation sample, stored in the laboratory shared drive</button>
+        <div class="mcq-feedback pass" id="mcq1-pass">Correct. Validation documentation should be comprehensive and traceable. It includes the validation report itself (covering methods, samples used, results, sensitivity/specificity, limitations, and conclusions), but also the supporting documentation needed before the pipeline can enter clinical service — SOPs for operation, evidence that users have been trained and assessed as competent, and documented change control approval. This forms part of the laboratory's quality management system and is required for accreditation.</div>
+        <div class="mcq-feedback fail" id="mcq1-fail">Not quite. Validation documentation needs to be comprehensive and fit within the laboratory's quality management system. A results summary alone is insufficient — the documentation should enable another scientist to understand exactly what was tested, how, and why. It should also include the operational documentation (SOPs, training records, change control) needed to demonstrate the pipeline is ready for clinical use. Think about what an auditor or accreditation assessor would expect to see.</div>
       </div>
 
       <div class="mcq-card" id="mcq2">
